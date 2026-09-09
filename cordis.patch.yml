@@ -1,0 +1,7 @@
+# ming-life bundle patch.
+#
+# 和选址工作台一样做个好公民：只往 `sidebar.footer.action` 加一个按钮、往 `shell.overlay`
+# 挂一个面板，两处都走 slots.inject，与任何侧边栏并存，不需要停用 ui-sidebar。
+- insert:
+    - id: ming-life
+      name: ming-life

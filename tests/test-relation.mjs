@@ -1,0 +1,22 @@
+import { buildBazi } from '../src/engines/bazi.js';
+import { buildZiwei } from '../src/engines/ziwei.js';
+import { compareCharts } from '../src/engines/relation.js';
+const mk = (d, t, g) => ({ bazi: buildBazi({ date: d, time: t, gender: g }), ziwei: buildZiwei({ date: d, time: t, gender: g }) });
+const me = { ...mk('1990-05-20', '14:30', '男'), name: '我' };
+const them = { ...mk('1992-11-03', '09:20', '女'), name: '小林' };
+const r = compareCharts(me, them);
+console.log('== 总述 ==\n', r.overall.summary);
+console.log('\n日主:', r.ganRel.label, '| 对方于我为', r.theyToMe, '| 我于对方为', r.meToThem);
+console.log('日支关系:', r.zhiRels.map(x=>x.label).join('、') || '无');
+console.log('命宫地支关系:', r.palaceRels.map(x=>x.label).join('、') || '无');
+console.log('\n== 互动结构 ==');
+r.aspects.forEach(a => console.log(` ${a.label}（差 ${a.gap}）: ${a.insight.summary}${a.insight.note ? '\n    ' + a.insight.note : ''}`));
+console.log('\n== 冲突来源 ==');
+r.conflicts.forEach(c => console.log(' -', c.source, '|', c.plain, '|', c.basis));
+console.log('\n== 互补之处 ==');
+r.complements.forEach(c => console.log(' +', c.source, '|', c.plain));
+console.log('\n日主方向:', r.ganRelInfo.text, '→', r.ganRelInfo.side);
+// 只允许出现在「这里不给契合度分数」这句声明里，不允许真的输出一个分数
+const scoreClaim = /(契合度|适合度|匹配度)\s*[:：]?\s*\d/.test(JSON.stringify(r));
+console.log('未输出契合度分数:', !scoreClaim);
+console.log('各观察面阈值:', r.aspects.map(a => `${a.label} 差${a.gap}/阈值${a.threshold}${a.far?' ← 明显':''}`).join(' | '));

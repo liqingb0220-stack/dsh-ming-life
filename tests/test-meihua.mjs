@@ -1,0 +1,11 @@
+import { castByTime, castByNumbers, buildMeihua } from '../src/engines/meihua.js';
+const c = castByTime(new Date('2026-09-08T15:20:00'));
+console.log('起卦:', c.text, JSON.stringify(c.formula));
+const g = buildMeihua(c, '要不要换工作');
+console.log('本卦:', g.ben.name, '互卦:', g.hu.name, '变卦:', g.bian.name, '动爻:', g.movingLine);
+console.log('体:', g.ti.trigram.name + g.ti.pos, '用:', g.yong.trigram.name + g.yong.pos);
+console.log('体用:', g.tiYong.label, g.tiYong.desc);
+console.log('过程 初/中/末:', g.process.start.label, '→', g.process.middle.label, '→', g.process.end.label);
+console.log('总分:', g.totalScore, g.verdict);
+const g2 = buildMeihua(castByNumbers(37, 12), '数字起卦');
+console.log('\n数字起卦:', g2.ben.name, '变', g2.bian.name, '动爻', g2.movingLine, g2.tiYong.label, g2.verdict);

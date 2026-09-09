@@ -1,0 +1,10 @@
+import { buildBazi, baziAtYear } from '../src/engines/bazi.js';
+const b = buildBazi({ date: '1990-05-20', time: '14:30', gender: '男' });
+console.log('四柱:', b.pillars.map(p => p.gan + p.zhi).join(' '));
+console.log('日主:', JSON.stringify(b.dayMaster), '强弱:', b.strength.label, b.strength.score, b.strength.deLing, '喜:', b.strength.favor);
+console.log('五行%:', JSON.stringify(b.wuxingPct));
+console.log('十神:', b.tenGods.slice(0, 5).map(t => t.god + ':' + t.weight).join(' '));
+console.log('大运:', b.daYun.slice(0, 4).map(d => `${d.ganZhi}(${d.startAge}-${d.endAge} ${d.shiShenGan})`).join(' | '));
+console.log('起运:', JSON.stringify(b.startInfo));
+const y = baziAtYear(b, 2026);
+console.log('2026 大运:', y.daYun && y.daYun.ganZhi, '流年:', JSON.stringify(y.liuNian));

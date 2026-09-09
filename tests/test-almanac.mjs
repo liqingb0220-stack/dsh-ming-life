@@ -1,0 +1,17 @@
+import { almanacOf, scoreDay, buildCandidates, explainDay } from '../src/engines/almanac.js';
+import { buildBazi } from '../src/engines/bazi.js';
+const b = buildBazi({ date: '1990-05-20', time: '14:30', gender: '男' });
+const alm = almanacOf(new Date(2026, 8, 15));
+console.log('日期:', alm.iso, alm.dayGZ, alm.lunarText, '| 值神', alm.tianShen, alm.tianShenType, '| 建除', alm.zhiXing, '| 宿', alm.xiu, alm.xiuLuck);
+const s = scoreDay(alm, 'move', b);
+console.log('搬家匹配:', s.score, s.level.label, '| 加分', s.plus.length, '减分', s.minus.length);
+s.plus.forEach(p => console.log('   +', p.label, p.value));
+s.minus.forEach(p => console.log('   -', p.label, p.value));
+const cands = buildCandidates({ from: new Date(2026, 8, 10), to: new Date(2026, 9, 10), activityKey: 'wedding', bazi: b });
+console.log('\n候选天数:', cands.length);
+const top = [...cands].sort((a, c) => c.score - a.score).slice(0, 5);
+top.forEach(d => console.log(` ${d.iso} ${d.dayGZ} 分${d.score} ${d.level.label} 宜中命中:${d.yiHits.join('/')||'无'} 忌:${d.jiHits.join('/')||'无'}`));
+const bad = cands.filter(d => d.jiHits.length);
+console.log('直接相忌的天数:', bad.length, bad.slice(0,3).map(d=>d.iso+'('+d.jiHits.join()+')').join(' '));
+console.log('\n解释:', explainDay(top[0], b).summary);
+console.log('各分数段分布:', JSON.stringify(cands.reduce((a,d)=>{a[d.level.label]=(a[d.level.label]||0)+1;return a;},{})));
